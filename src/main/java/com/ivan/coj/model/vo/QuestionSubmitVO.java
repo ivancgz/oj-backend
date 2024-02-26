@@ -1,65 +1,48 @@
 package com.ivan.coj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.ivan.coj.model.dto.question.JudgeConfig;
-import com.ivan.coj.model.entity.Question;
+import com.ivan.coj.model.dto.questionsubmit.JudgeInfo;
+import com.ivan.coj.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 题目封装类
+ * 题目提交封装类
  */
 @Data
-public class QuestionVO implements Serializable {
+public class QuestionSubmitVO implements Serializable {
     /**
      * id
      */
     private Long id;
 
     /**
-     * 标题
+     * 编程语言
      */
-    private String title;
+    private String language;
 
     /**
-     * 内容
+     * 用户代码
      */
-    private String content;
+    private String code;
 
     /**
-     * 标签列表
+     * 判题信息
      */
-    private List<String> tags;
+    private JudgeInfo judgeInfo;
 
     /**
-     * 题目提交数
+     * 判题状态(0-待判题, 1-判题中, 2-成功, 3-失败)
      */
-    private Integer submitNum;
+    private Integer status;
 
     /**
-     * 题目通过数
+     * 题目 id
      */
-    private Integer acceptedNum;
-
-
-    /**
-     * 判题配置
-     */
-    private JudgeConfig judgeConfig;
-
-    /**
-     * 点赞数
-     */
-    private Integer thumbNum;
-
-    /**
-     * 收藏数
-     */
-    private Integer favourNum;
+    private Long questionId;
 
     /**
      * 创建用户 id
@@ -77,50 +60,49 @@ public class QuestionVO implements Serializable {
     private Date updateTime;
 
     /**
-     * 创建题目人的信息
+     * 提交用户信息
      */
     private UserVO userVO;
+
+    /**
+     * 对应题目信息
+     */
+    private QuestionVO questionVO;
     
     /**
      * 包装类转对象
      *
-     * @param questionVO
+     * @param questionSubmitVO
      * @return
      */
-    public static Question voToObj(QuestionVO questionVO) {
-        if (questionVO == null) {
+    public static QuestionSubmit voToObj(QuestionSubmitVO questionSubmitVO) {
+        if (questionSubmitVO == null) {
             return null;
         }
-        Question question = new Question();
-        BeanUtils.copyProperties(questionVO, question);
-        List<String> tagList = questionVO.getTags();
-        if (tagList != null) {
-            question.setTags(JSONUtil.toJsonStr(tagList));
+        QuestionSubmit questionSubmit = new QuestionSubmit();
+        BeanUtils.copyProperties(questionSubmitVO, questionSubmit);
+        JudgeInfo judgeInfoObj = questionSubmitVO.getJudgeInfo();
+        if (judgeInfoObj != null) {
+            questionSubmit.setJudgeInfo(JSONUtil.toJsonStr(judgeInfoObj));
         }
-        JudgeConfig voJudgeConfig = questionVO.getJudgeConfig();
-        if (voJudgeConfig != null) {
-            question.setJudgeConfig(JSONUtil.toJsonStr(voJudgeConfig));
-        }
-        return question;
+        return questionSubmit;
     }
 
     /**
      * 对象转包装类
      *
-     * @param question
+     * @param questionSubmit
      * @return
      */
-    public static QuestionVO objToVo(Question question) {
-        if (question == null) {
+    public static QuestionSubmitVO objToVo(QuestionSubmit questionSubmit) {
+        if (questionSubmit == null) {
             return null;
         }
-        QuestionVO questionVO = new QuestionVO();
-        BeanUtils.copyProperties(question, questionVO);
-        List<String> tagList = JSONUtil.toList(question.getTags(), String.class);
-        questionVO.setTags(tagList);
-        String judgeConfigStr = question.getJudgeConfig();
-        questionVO.setJudgeConfig(JSONUtil.toBean(judgeConfigStr, JudgeConfig.class));
-        return questionVO;
+        QuestionSubmitVO questionSubmitVO = new QuestionSubmitVO();
+        BeanUtils.copyProperties(questionSubmit, questionSubmitVO);
+        String judgeInfoStr = questionSubmit.getJudgeInfo();
+        questionSubmitVO.setJudgeInfo(JSONUtil.toBean(judgeInfoStr, JudgeInfo.class));
+        return questionSubmitVO;
     }
     
     private static final long serialVersionUID = 1L;

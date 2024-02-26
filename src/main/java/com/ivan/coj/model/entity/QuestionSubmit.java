@@ -16,7 +16,7 @@ public class QuestionSubmit implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -57,7 +57,6 @@ public class QuestionSubmit implements Serializable {
     /**
      * 更新时间
      */
-    @TableLogic
     private Date updateTime;
 
     @TableField(exist = false)
