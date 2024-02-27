@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ivan.coj.common.ErrorCode;
 import com.ivan.coj.constant.CommonConstant;
 import com.ivan.coj.exception.BusinessException;
+import com.ivan.coj.judge.JudgeService;
 import com.ivan.coj.model.dto.question.QuestionQueryRequest;
 import com.ivan.coj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.ivan.coj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
@@ -23,8 +24,10 @@ import com.ivan.coj.service.QuestionSubmitService;
 import com.ivan.coj.mapper.QuestionSubmitMapper;
 import com.ivan.coj.service.UserService;
 import com.ivan.coj.utils.SqlUtils;
+import io.lettuce.core.protocol.CompleteableCommand;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +53,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Resource
     private UserService userService;
+
+    @Resource
+    @Lazy
+    private JudgeService judgeService;
 
     /**
      * 提交题目
@@ -86,7 +94,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (!save) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "数据插入失败");
         }
-        return questionSubmit.getId();
+        // 执行判题服务
+        Long questionSubmitId = questionSubmit.getId();
+        CompletableFuture.runAsync(() -> {
+            judgeService.doJudge(questionSubmitId);
+        });
+        return questionSubmitId;
     }
 
     /**
