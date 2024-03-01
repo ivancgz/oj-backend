@@ -3,7 +3,7 @@ package com.ivan.coj.judge.codesandbox.impl;
 import com.ivan.coj.judge.codesandbox.CodeSandbox;
 import com.ivan.coj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.ivan.coj.judge.codesandbox.model.ExecuteCodeResponse;
-import com.ivan.coj.model.dto.questionsubmit.JudgeInfo;
+import com.ivan.coj.judge.codesandbox.model.JudgeInfo;
 import com.ivan.coj.model.enums.JudgeInfoMessageEnum;
 import com.ivan.coj.model.enums.QuestionSubmitStatusEnum;
 

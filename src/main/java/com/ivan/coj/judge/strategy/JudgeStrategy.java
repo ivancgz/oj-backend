@@ -1,6 +1,6 @@
 package com.ivan.coj.judge.strategy;
 
-import com.ivan.coj.model.dto.questionsubmit.JudgeInfo;
+import com.ivan.coj.judge.codesandbox.model.JudgeInfo;
 
 /**
  * 判题策略

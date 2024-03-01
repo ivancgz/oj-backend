@@ -1,7 +1,7 @@
 package com.ivan.coj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.ivan.coj.model.dto.questionsubmit.JudgeInfo;
+import com.ivan.coj.judge.codesandbox.model.JudgeInfo;
 import com.ivan.coj.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
